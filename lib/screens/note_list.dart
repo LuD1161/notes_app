@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pass_list/models/note.dart';
 import 'package:pass_list/screens/note_detail.dart';
+import 'package:pass_list/utils/NoteProvider.dart';
 import 'package:pass_list/utils/database_helper.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NoteList extends StatefulWidget {
@@ -16,10 +18,9 @@ class NoteListState extends State<NoteList> {
 
   @override
   Widget build(BuildContext context) {
-    if (noteList == null) {
-      noteList = List<Note>();
-      updateListView();
-    }
+    final noteProvider = Provider.of<NoteProvider>(context);
+    this.noteList = noteProvider.noteList;
+    this.count = this.noteList.length;
 
     return Scaffold(
       appBar: AppBar(
