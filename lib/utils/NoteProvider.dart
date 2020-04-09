@@ -19,11 +19,10 @@ get noteList => _noteList;
      _noteList = notesList;
   }
 
-  Future fetchNotes() async {
+  fetchNotes() async {
     await databaseHelper.initializeDatabase();
     List<Note> noteList = await databaseHelper.getNoteList();
     setNoteList(noteList);
-    return noteList;
   }
 
   Future<int> updateNote(note) async{
@@ -42,6 +41,7 @@ get noteList => _noteList;
 
   Future<int> deleteNote(noteId) async{
     var result =  await databaseHelper.deleteNote(noteId);
+    await fetchNotes();
     notifyListeners();
     return result;
   }

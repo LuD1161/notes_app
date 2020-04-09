@@ -20,7 +20,6 @@ class NoteDetailState extends State<NoteDetail> {
   Note note;
 
   TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
 
   NoteDetailState(this.note, this.appBarTitle);
 
@@ -31,7 +30,6 @@ class NoteDetailState extends State<NoteDetail> {
 
     // Prefilled values for text controllers
     titleController.text = note.title;
-    descriptionController.text = note.description;
 
     return WillPopScope(
       onWillPop: () {
@@ -50,7 +48,7 @@ class NoteDetailState extends State<NoteDetail> {
         body: Padding(
           padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
           child: ListView(children: <Widget>[
-            // Second Element
+            // Title - First Element
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
@@ -62,23 +60,8 @@ class NoteDetailState extends State<NoteDetail> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
-            ),
-
-            // Third Element
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                style: textStyle,
-                controller: descriptionController,
-                decoration: InputDecoration(
-                    labelText: 'Description',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            // Fourth Element
+            ),          
+            // Save - Second Element
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: Row(children: <Widget>[
@@ -100,27 +83,6 @@ class NoteDetailState extends State<NoteDetail> {
                   ),
                 ),
 
-                SizedBox(
-                  width: 5.0,
-                ),
-
-                // Delete Button : Second Element
-                Expanded(
-                  child: RaisedButton(
-                    color: Theme.of(context).primaryColorDark,
-                    textColor: Theme.of(context).primaryColorLight,
-                    child: Text(
-                      "Delete",
-                      textScaleFactor: 1.5,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        debugPrint("Delete Button Pressed");
-                        _delete(noteProvider);
-                      });
-                    },
-                  ),
-                ),
               ]),
             )
           ]),
@@ -135,7 +97,7 @@ class NoteDetailState extends State<NoteDetail> {
     Navigator.pop(context, true);
     
     note.title = titleController.text;
-    note.description = descriptionController.text;
+    note.description = titleController.text;
     note.date = DateFormat.yMMMd().format(DateTime.now());
     
     int result;
