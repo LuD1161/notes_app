@@ -26,31 +26,20 @@ class NoteList extends StatelessWidget {
     );
   }
 
-  getnoteListView(BuildContext context) {
+  ListView getnoteListView(BuildContext context) {
     final noteProvider = Provider.of<NoteProvider>(context);
     var noteList = noteProvider.noteList;
     var count = noteList.length;
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
-    return RefreshIndicator(
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: count>0
-            ? ListView.builder(
-                itemCount: count,
-                itemBuilder: (BuildContext context, int index) {
-                  print(noteList[index].title);
-                  return Text(
-                    noteList[index].title,
-                    style: titleStyle,
-                  );
-                },
-              )
-            : Center(
-                child: CircularProgressIndicator(),
-              ),
-      ),
-      onRefresh: () => null,
+    return ListView.builder(
+      itemCount: count,
+      itemBuilder: (BuildContext context, int index) {
+        print(noteList[index].title);
+        return Text(
+          noteList[index].title,
+          style: titleStyle,
+        );
+      },
     );
   }
 }
