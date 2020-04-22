@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pass_list/models/note.dart';
-import 'package:pass_list/utils/database_helper.dart';
-import 'package:pass_list/utils/noteHelper.dart';
+import 'package:pass_list/providers/NotesProvider.dart';
 import 'package:pass_list/widgets/noteCard.dart';
 import 'package:pass_list/widgets/noteListCard.dart';
-// import 'package:pass_list/widgets/noteListCard.dart';
-// import 'package:pass_list/widgets/slidableNoteListCard.dart';
+import 'package:provider/provider.dart';
 
 //Search delegate
 class SearchAppBarDelegate extends SearchDelegate<Note> {
   final List<Note> _history;
-  DatabaseHelper databaseHelper = DatabaseHelper();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Note> noteList;
 
-  SearchAppBarDelegate(List<Note> noteList)
-      : noteList = noteList,
+  SearchAppBarDelegate(NotesProvider noteProvider)
+      : noteList = noteProvider.allNotes,
         //pre-populated history of words
         // using set to only keep unique elements in history
         _history = <Note>[],
@@ -41,7 +38,8 @@ class SearchAppBarDelegate extends SearchDelegate<Note> {
   // Builds page to populate search results.
   @override
   Widget buildResults(BuildContext context) {
-    Note note = noteList
+    var noteProvider = Provider.of<NotesProvider>(context);
+    Note note = noteProvider.allNotes
         .where(
             (note) => note.title.toLowerCase().startsWith(query.toLowerCase()))
         .first;
@@ -60,9 +58,10 @@ class SearchAppBarDelegate extends SearchDelegate<Note> {
   // Suggestions list while typing search query - this.query.
   @override
   Widget buildSuggestions(BuildContext context) {
+    var noteProvider = Provider.of<NotesProvider>(context);
     final Iterable<Note> suggestions = this.query.isEmpty
         ? _history
-        : noteList.where((note) => note.title.toLowerCase().startsWith(query
+        : noteProvider.allNotes.where((note) => note.title.toLowerCase().startsWith(query
             .toLowerCase())); // Convert both to lowercase for all comparision
 
     return _WordSuggestionList(
@@ -105,7 +104,6 @@ class SearchAppBarDelegate extends SearchDelegate<Note> {
 
 // Suggestions list widget displayed in the search page.
 class _WordSuggestionList extends StatelessWidget {
-  final DatabaseHelper databaseHelper = DatabaseHelper();
   final List<Note> noteList;
 
   _WordSuggestionList(
@@ -143,16 +141,5 @@ class _WordSuggestionList extends StatelessWidget {
     );
   }
 
-  delete(BuildContext context, Note note) async {
-    int result = await databaseHelper.deleteNote(note.id);
-    if (result != 0) {
-      print("history");
-      print(history);
-      print("Suggestions");
-      print(suggestions);
-      noteList.remove(note);
-      history.remove(note);
-      showSnackBar(context, 'Note Deleted again Successfully');
-    }
-  }
+
 }

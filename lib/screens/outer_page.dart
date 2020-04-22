@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pass_list/models/note.dart';
+import 'package:pass_list/providers/NotesProvider.dart';
 import 'package:pass_list/screens/another_screen.dart';
 import 'package:pass_list/screens/note_list.dart';
 import 'package:pass_list/screens/search_screen.dart';
 import 'package:pass_list/utils/database_helper.dart';
 import 'package:pass_list/utils/noteHelper.dart';
+import 'package:provider/provider.dart';
 
 class OuterPage extends StatefulWidget {
   @override
@@ -15,10 +17,8 @@ class OuterPage extends StatefulWidget {
 
 class OuterPageState extends State<OuterPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  DatabaseHelper databaseHelper = DatabaseHelper();
-  //Calling search delegate class
-  SearchAppBarDelegate _searchDelegate;
   int _selectedTab = 0;
+  var noteList;
   final _pageOptions = [
     NoteList(),
     AnotherScreen(),
@@ -26,15 +26,12 @@ class OuterPageState extends State<OuterPage> {
 
   @override
   void initState() {
-    updateListView().then((results) {
-      this._searchDelegate = SearchAppBarDelegate(results);
-    });
-    print("initState called");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var noteProvider = Provider.of<NotesProvider>(context);
     // https://stackoverflow.com/a/53839983
     var customFabButton;
     if (_selectedTab == 0) {
@@ -62,7 +59,7 @@ class OuterPageState extends State<OuterPage> {
             icon: const Icon(Icons.search),
             //Don't block the main thread
             onPressed: () {
-              showSearchPage(context, _searchDelegate);
+              showSearchPage(context, SearchAppBarDelegate(noteProvider));
             },
           ),
         ],
