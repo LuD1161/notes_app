@@ -81,3 +81,8 @@ void navigateToDetail(BuildContext context, Note note, String title) async {
     return NoteDetail(note, title);
   }));
 }
+
+Future<Note> decryptNote(Note note) async {
+  Future.delayed(Duration(seconds: 1), () => 'hello world');
+  return note;
+}

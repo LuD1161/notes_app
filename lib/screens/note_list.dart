@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_list/models/note.dart';
 import 'package:pass_list/providers/NotesProvider.dart';
-import 'package:pass_list/utils/database_helper.dart';
-import 'package:pass_list/utils/noteHelper.dart';
-import 'package:pass_list/widgets/noteCard.dart';
 import 'package:pass_list/widgets/noteList.dart';
 import 'package:provider/provider.dart';
 

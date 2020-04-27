@@ -5,28 +5,37 @@ import 'package:flutter/material.dart';
 import 'package:pass_list/models/note.dart';
 import 'package:pass_list/utils/database_helper.dart';
 import 'package:pass_list/utils/noteHelper.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 
 class NotesProvider with ChangeNotifier {
   DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<Note> _noteList;
+  List<Note> _noteList, decryptedNoteList;
   int _count = 0;
+  bool _notesDecrypted = false;
 
   UnmodifiableListView<Note> get allNotes => UnmodifiableListView(_noteList);
 
-  void getNotes() {
-    final Future<Database> dbFuture = _databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Note>> noteListFuture = _databaseHelper.getNoteList();
-      noteListFuture.then((noteList) {
-        this._noteList = noteList;
-        this._count = noteList.length;
-        notifyListeners();
-      });
-    });
+  getNotes() async {
+    await _databaseHelper.initializeDatabase();
+    List<Note> noteList = await _databaseHelper.getNoteList();
+    this._noteList = noteList;
+    this._count = noteList.length;
+    notifyListeners();
+  }
+
+  UnmodifiableListView<Note> get allDecryptedNotes =>
+      UnmodifiableListView(decryptedNoteList);
+  getAllDecryptedNotes() async {
+    List<Note> decryptedNoteList = [];
+    for (var note in this._noteList) {
+      decryptedNoteList.add(await decryptNote(note));
+    }
+    this.decryptedNoteList = decryptedNoteList;
+    this._notesDecrypted = true;
+    notifyListeners();
   }
 
   int get count => _count;
+  bool get decrypted => _notesDecrypted;
 
   void addNote(BuildContext context, Note note) async {
     var result;
@@ -41,13 +50,13 @@ class NotesProvider with ChangeNotifier {
       } else {
         showSnackBar(context, '${note.title} Created');
       }
-    }else{
+    } else {
       showSnackBar(context, 'Some error occurred');
     }
     notifyListeners();
   }
 
-  void deleteNote(BuildContext context, Note note)async{
+  void deleteNote(BuildContext context, Note note) async {
     if (note.id == null) {
       showSnackBar(context, 'No note was deleted');
       return;
