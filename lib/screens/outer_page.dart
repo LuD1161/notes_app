@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_list/models/note.dart';
 import 'package:pass_list/providers/NotesProvider.dart';
-import 'package:pass_list/screens/notePage_screen.dart';
+import 'package:pass_list/screens/anotherPage_screen.dart';
 import 'package:pass_list/screens/note_list.dart';
 import 'package:pass_list/screens/search_screen.dart';
 import 'package:pass_list/utils/noteHelper.dart';
@@ -20,7 +20,7 @@ class OuterPageState extends State<OuterPage> {
   var noteList;
   final _pageOptions = [
     NoteList(),
-    NotePageScreen(),
+    AnotherPageScreen(),
   ];
 
   @override

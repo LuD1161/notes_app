@@ -8,9 +8,9 @@ import 'package:pass_list/utils/noteHelper.dart';
 
 class NotesProvider with ChangeNotifier {
   DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<Note> _noteList, decryptedNoteList;
+  List<Note> _noteList, asyncNoteList;
   int _count = 0;
-  bool _notesDecrypted = false;
+  bool _asyncCompleted = false;
 
   UnmodifiableListView<Note> get allNotes => UnmodifiableListView(_noteList);
 
@@ -22,20 +22,20 @@ class NotesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  UnmodifiableListView<Note> get allDecryptedNotes =>
-      UnmodifiableListView(decryptedNoteList);
-  getAllDecryptedNotes() async {
-    List<Note> decryptedNoteList = [];
+  UnmodifiableListView<Note> get allAsyncNotes =>
+      UnmodifiableListView(asyncNoteList);
+  getAllAsyncNotes() async {
+    List<Note> asyncNoteList = [];
     for (var note in this._noteList) {
-      decryptedNoteList.add(await decryptNote(note));
+      asyncNoteList.add(await asyncFunction(note));
     }
-    this.decryptedNoteList = decryptedNoteList;
-    this._notesDecrypted = true;
+    this.asyncNoteList = asyncNoteList;
+    this._asyncCompleted = true;
     notifyListeners();
   }
 
   int get count => _count;
-  bool get decrypted => _notesDecrypted;
+  bool get asyncCompleted => _asyncCompleted;
 
   void addNote(BuildContext context, Note note) async {
     var result;

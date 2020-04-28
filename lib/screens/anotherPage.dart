@@ -5,15 +5,15 @@ import 'package:provider/provider.dart';
 
 enum viewType { List, Staggered }
 
-class NotePage extends StatefulWidget {
-  static const routeName = '/NotePage';
+class AnotherPage extends StatefulWidget {
+  static const routeName = '/AnotherPage';
   final notesViewType;
-  const NotePage({Key key, this.notesViewType}) : super(key: key);
+  const AnotherPage({Key key, this.notesViewType}) : super(key: key);
   @override
-  _NotePageState createState() => _NotePageState();
+  _AnotherPageState createState() => _AnotherPageState();
 }
 
-class _NotePageState extends State<NotePage> {
+class _AnotherPageState extends State<AnotherPage> {
   viewType notesViewType;
 
   @override
@@ -27,7 +27,7 @@ class _NotePageState extends State<NotePage> {
     final Axis slidableDirection = Axis.horizontal;
     return Container(
         child: Consumer<NotesProvider>(
-            builder: (context, notes, _) => notes.decryptedNoteList.isNotEmpty
+            builder: (context, notes, _) => notes.asyncNoteList.isNotEmpty
                 ? ListView.builder(
                     itemCount: notes.allNotes.length,
                     itemBuilder: (BuildContext context, int index) {
