@@ -25,7 +25,7 @@ class OuterPageState extends State<OuterPage> {
 
   @override
   Widget build(BuildContext context) {
-    var noteProvider = Provider.of<NotesProvider>(context);
+    var noteProvider = Provider.of<NotesProvider>(context, listen: false);
     // https://stackoverflow.com/a/53839983
     var customFabButton;
     if (_selectedTab == 0) {
